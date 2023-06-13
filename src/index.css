@@ -1,0 +1,29 @@
+html {
+  box-sizing: border-box;
+  font-size: 62.5%;
+  height: 100%;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  background-color: rgb(240, 239, 239);
+  font-family: 'Poppins', sans-serif;
+}
+
+.formulario {
+  max-width: 45rem;
+  /* margin-top: 2rem; */
+}
+.form {
+  max-height: 50rem;
+}
+.seleccionar:hover {
+  cursor: pointer;
+  background-color: rgb(232, 232, 232);
+  border-radius: 1rem;
+}
