@@ -22,11 +22,11 @@ const AuthProvider = ({ children }) => {
         },
       };
       try {
-        const { data } = await clientAxios("/dashboard", config);
+        const { data   } = await clientAxios("/dashboard", config);
         setAuth(data)
       } catch (error) {
         console.log(error.response)
-        setAuth({});
+        // setAuth({});
         console.log(error);
       }
       setChecking(false);
