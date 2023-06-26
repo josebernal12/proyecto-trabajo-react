@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { OneError } from "../errors/OneError";
 import clientAxios from "../../config/clientAxios";
 import { useAuth } from "../../hooks/useAuth";

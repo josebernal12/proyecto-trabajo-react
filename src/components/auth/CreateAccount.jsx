@@ -45,6 +45,7 @@ export const CreateAccount = () => {
         rfc,
         email,
         password,
+        nombreComercial: nameCommercial,
         repeatPassword,
         persona: typePerson,
       });
@@ -79,6 +80,7 @@ export const CreateAccount = () => {
 
       setAlertBgGreen("te hemos enviado un email para Confirma tu cuenta");
       setName("");
+      setNameCommercial("");
       setSurnamePa("");
       setSurnameMA("");
       setPassword("");

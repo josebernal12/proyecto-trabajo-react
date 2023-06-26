@@ -27,3 +27,7 @@ body {
   background-color: rgb(232, 232, 232);
   border-radius: 1rem;
 }
+
+.informacion-lista {
+  list-style: none;
+}

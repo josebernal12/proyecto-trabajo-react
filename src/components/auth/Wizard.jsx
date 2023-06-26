@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import Swal from "sweetalert2";
 import { useProfile } from "../../hooks/useProfile";
+import { OneError } from "../errors/OneError";
 
 const Wizard = () => {
   const { auth } = useAuth();
@@ -19,16 +20,19 @@ const Wizard = () => {
   const [clavePaisNacionalidad, setClavePaisNacionalidad] = useState("");
   const [clavePaisNacimiento, setClavePaisNacimiento] = useState("");
   const [codigoPostal, setCodigoPostal] = useState("");
-  const [entidadFederativa, setEntidadFederativa] = useState("");
-  const [delegacion, setDelegacion] = useState("");
-  const [localidad, setLocalidad] = useState("");
+  // const [entidadFederativa, setEntidadFederativa] = useState("");
+  // const [delegacion, setDelegacion] = useState("");
+  // const [localidad, setLocalidad] = useState("");
   const [colonia, setColonia] = useState("");
   const [tipoVialidad, setTipoVialidad] = useState("");
   const [calle, setCalle] = useState("");
   const [numeroExterior, setNumeroExterior] = useState("");
   const [numeroInterior, setNumeroInterior] = useState("");
   const [actividadVulnerable, setActividadVulnerable] = useState("");
+  const [actividadVulnerableRealizada, setActividadVulnerableRealizada] =
+    useState("");
   const [existeValor, setExisteValor] = useState(false);
+  const [error, setError] = useState("");
 
   const {
     states,
@@ -38,6 +42,10 @@ const Wizard = () => {
     municipios,
     setValorMunicipio,
     valorMunicipio,
+    AddActividadVulnerable,
+    valorState,
+    addProfile,
+    setModalCompletado,
   } = useProfile();
   const handleNext = () => {
     setCurrentStep((prevStep) => prevStep + 1);
@@ -51,51 +59,90 @@ const Wizard = () => {
     e.preventDefault();
     setExisteValor(true);
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    //   submitProfile({
-    //     entidadFederativa,
-    //     fechaConstitucion,
-    //     fechaNacimiento,
-    //     calle,
-    //     claveLargaDistancia,
-    //     clavePais,
-    //     clavePaisNacimiento,
-    //     clavePaisNacionalidad,
-    //     codigoPostal,
-    //     colonia,
-    //     numeroExterior,
-    //     numeroInterior,
-    //     actividadVulnerable,
-    //     tipoVialidad,
-    //     delegacion,
-    //     numeroMovil,
-    //     numeroTelefonico,
-    //     claveUnica,
-    //     localidad,
-    //   });
+    if (auth.persona === "M") {
+      if (
+        ![
+          fechaConstitucion,
+          clavePaisNacionalidad,
+          claveLargaDistancia,
+          numeroTelefonico,
+          numeroMovil,
+        ].includes(" ")
+      ) {
+        await addProfile({
+          fechaConstitucion,
+          clavePaisNacionalidad,
+          claveLargaDistancia,
+          numeroTelefonico,
+          numeroMovil,
+          usuario: auth._id,
+        });
+        setModalCompletado(true);
+      } else {
+        setError("todos los campos son obligatorios");
+        setTimeout(() => {
+          setError("");
+        }, 2000);
+      }
+    }
+    if (auth.persona === "F") {
+      if (
+        ![
+          fechaNacimiento,
+          claveUnica,
+          clavePaisNacimiento,
+          clavePaisNacionalidad,
+          claveLargaDistancia,
+          numeroTelefonico,
+          numeroMovil,
+        ].includes("")
+      ) {
+        await addProfile({
+          fechaNacimiento,
+          claveUnica,
+          clavePaisNacimiento,
+          clavePaisNacionalidad,
+          claveLargaDistancia,
+          numeroTelefonico,
+          numeroMovil,
+          usuario: auth._id,
+        });
+        setModalCompletado(true);
+      } else {
+        setError("todos los campos son obligatorios");
+        setTimeout(() => {
+          setError("");
+        }, 2000);
+      }
+      // setError("");
+    }
   };
 
-  const handleAgregarDomicilio = (e) => {
+  const handleAgregarDomicilio = async (e) => {
     e.preventDefault();
-    console.log("click");
-    // if (
-    //   [
-    //     codigoPostal,
-    //     delegacion,
-    //     localidad,
-    //     colonia,
-    //     tipoVialidad,
-    //     calle,
-    //     numeroExterior,
-    //     numeroInterior,
-    //     actividadVulnerable,
-    //   ].includes("")
-    // ) {
-    //   console.log("error falta uno");
-    //   return;
-    // }
+
+    if (
+      [
+        codigoPostal,
+        valorMunicipio,
+        valorState,
+        colonia,
+        tipoVialidad,
+        calle,
+        numeroExterior,
+        numeroInterior,
+        actividadVulnerable,
+        actividadVulnerableRealizada,
+      ].includes("")
+    ) {
+      setError("todos los campos son obligatorios");
+      setTimeout(() => {
+        setError("");
+      }, 2000);
+      return;
+    }
     Swal.fire({
       position: "top-end",
       icon: "success",
@@ -103,11 +150,23 @@ const Wizard = () => {
       showConfirmButton: false,
       timer: 1500,
     });
+    await AddActividadVulnerable({
+      actividadVulnerableRealizada,
+      codigoPostal,
+      valorState,
+      valorMunicipio,
+      // localidad,
+      colonia,
+      tipoVialidad,
+      calle,
+      numeroExterior,
+      numeroInterior,
+      actividadVulnerable,
+      usuario: auth._id,
+    });
     setExisteValor(false);
+    setActividadVulnerableRealizada("");
     setCodigoPostal("");
-    setEntidadFederativa("");
-    setDelegacion("");
-    setLocalidad("");
     setColonia("");
     setTipoVialidad("");
     setCalle("");
@@ -115,29 +174,16 @@ const Wizard = () => {
     setNumeroInterior("");
     setActividadVulnerable("");
   };
-  let localidades;
-  let localidadForm;
+
   if (municipios.municipios) {
-    localidades = municipios.municipios.filter((municio) => {
-      if (municio.nombre === valorMunicipio) {
-        return municio.localidades;
-      }
-    });
-    localidadForm = localidades.map((localidadState) => {
-      return localidadState.localidades;
-    });
-    localidadForm.map((prueba) => {
-      console.log(prueba);
-    });
     setCargando(true);
-  } else {
-    setCargando(false);
   }
 
   return (
     <>
       <>
         <div>
+          {error && <OneError alert={error} />}
           <nav className="nav d-flex justify-content-evenly mb-3">
             <button
               type="button"
@@ -247,8 +293,10 @@ const Wizard = () => {
                       <input
                         type="text"
                         className="form-control form-control-lg py-3"
-                        value={clavePais}
-                        onChange={(e) => setClavePais(e.target.value)}
+                        value={clavePaisNacionalidad}
+                        onChange={(e) =>
+                          setClavePaisNacionalidad(e.target.value)
+                        }
                       />
                     </div>
                   </>
@@ -318,6 +366,9 @@ const Wizard = () => {
                   <select
                     className="form-control form-control-lg"
                     defaultValue="seleccion"
+                    onChange={(e) =>
+                      setActividadVulnerableRealizada(e.target.value)
+                    }
                   >
                     <option value="seleccion" disabled>
                       -- Seleccione --
