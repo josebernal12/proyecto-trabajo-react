@@ -1,27 +1,32 @@
 /* eslint-disable react/prop-types */
 import { createContext, useEffect, useState } from "react";
 import clientAxios from "../config/clientAxios";
+import { useConfig } from "../hooks/useConfig";
+import { useAuth } from "../hooks/useAuth";
 
 const ProfileContext = createContext();
 
 const ProfileProvider = ({ children }) => {
+  const config = useConfig();
   const [profile, setProfile] = useState({});
-  const [valoresState, setValoresState] = useState([]);
-  // const [actividadVulnerable, setActividadVulnerable] = useState({});
+  // const [valoresState, setValoresState] = useState([]);
+  const [AllactividadVulnerable, setAllActividadVulnerable] = useState([]);
   const [states, setStates] = useState([]);
   const [valorState, setValorState] = useState("");
   const [municipios, setMunicipios] = useState([]);
   const [valorMunicipio, setValorMunicipio] = useState("");
   const [modalCompletado, setModalCompletado] = useState(false);
+  const [colaboradores, setColaboradores] = useState([]);
   // const [localidades, setLocalidades] = useState([])
   const [cargando, setCargando] = useState(false);
+  const { auth } = useAuth();
   useEffect(() => {
     const consultApi = async () => {
       const { data } = await clientAxios("/perfil/estados");
       const estados = data.map((state) => {
         return state.nombre;
       });
-      setValoresState(data);
+      // setValoresState(data);
       // setMunicipios(municipiosBD);
       setStates(estados);
     };
@@ -57,7 +62,7 @@ const ProfileProvider = ({ children }) => {
       };
       const { data } = await clientAxios("/perfil/obtener-perfil", config);
       if (data) {
-        setProfile(data)
+        setProfile(data);
         setModalCompletado(true);
         return;
       }
@@ -65,6 +70,33 @@ const ProfileProvider = ({ children }) => {
     };
     consultApi();
   }, []);
+
+  useEffect(() => {
+    const consultApi = async () => {
+      try {
+        const { data } = await clientAxios("/perfil/colaborador", config);
+        setColaboradores(data);
+      } catch (error) {
+        console.log(error.response);
+      }
+    };
+    consultApi();
+  }, [auth]);
+  useEffect(() => {
+    const consultApi = async () => {
+      try {
+        const { data } = await clientAxios(
+          "/perfil/actividad-vulnerable",
+          config
+        );
+        setAllActividadVulnerable(data);
+      } catch (error) {
+        console.log(error.response);
+      }
+    };
+    consultApi();
+  }, [auth]);
+
   const AddActividadVulnerable = async (info) => {
     const {
       actividadVulnerable,
@@ -108,9 +140,9 @@ const ProfileProvider = ({ children }) => {
       config
     );
     console.log(data);
+    setAllActividadVulnerable([...AllactividadVulnerable, data]);
   };
   const addProfile = async (info) => {
-    console.log(info);
     const token = localStorage.getItem("token");
     if (!token) {
       return;
@@ -124,6 +156,18 @@ const ProfileProvider = ({ children }) => {
 
     const { data } = await clientAxios.post("/perfil", info, config);
     console.log(data);
+  };
+  const addCollaborators = async (infoCollaborator) => {
+    try {
+      const { data } = await clientAxios.post(
+        "/perfil/colaborador",
+        infoCollaborator,
+        config
+      );
+      setColaboradores([data, ...colaboradores]);
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <ProfileContext.Provider
@@ -141,7 +185,10 @@ const ProfileProvider = ({ children }) => {
         addProfile,
         setModalCompletado,
         modalCompletado,
-        profile
+        profile,
+        addCollaborators,
+        colaboradores,
+        AllactividadVulnerable,
       }}
     >
       {children}

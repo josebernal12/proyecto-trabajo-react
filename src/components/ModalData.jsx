@@ -19,7 +19,7 @@ export const ModalData = () => {
       show={showModal}
       onHide={handleClose}
       backdrop="static"
-      size="lg"
+      size="xl"
     >
       <Modal.Header closeButton  >
         <Modal.Title>Modal Title</Modal.Title>

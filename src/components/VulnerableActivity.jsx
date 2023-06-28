@@ -26,6 +26,17 @@ export const VulnerableActivity = () => {
         >
           Actividades Vulnerables
         </Link>
+        <Link
+          to={"/dashboard/configurar-perfil/colaboradores"}
+          className={`${
+            location.pathname ===
+            "/dashboard/configurar-perfil/colaboradores"
+              ? "bg-primary text-white  rounded"
+              : ""
+          } nav-link fs-3 p-2  `}
+        >
+          Colaboradores
+        </Link>
       </nav>
       <button className="btn btn-primary text-uppercase fs-4 fw-bold py-3">
         Actualizar Perfil

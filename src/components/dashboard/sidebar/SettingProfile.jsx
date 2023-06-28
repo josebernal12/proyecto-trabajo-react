@@ -47,13 +47,24 @@ export const SettingProfile = () => {
           >
             Actividades Vulnerables
           </Link>
+          <Link
+            to={"/dashboard/configurar-perfil/colaboradores"}
+            className={`${
+              location.pathname ===
+              "/dashboard/configurar-perfil/colaboradores"
+                ? "bg-primary text-white  rounded"
+                : ""
+            } nav-link fs-3 p-2  `}
+          >
+            Colaboradores
+          </Link>
         </nav>
         <button className="btn btn-primary text-uppercase fs-4 fw-bold py-3">
           Actualizar Perfil
         </button>
       </div>
 
-      <div className="mt-5 container-xl w-50 ">
+      <div className="mt-5 container-xl  ">
         <div className="shadow bg-white p-3  ">
           <h2 className="mb-3 text-center">Información Personal</h2>
           <ul className="informacion-lista">

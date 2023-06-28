@@ -18,6 +18,7 @@ import { GeneratedQuerysPendients } from "./components/dashboard/sidebar/Generat
 import { CreateAccount } from "./components/auth/CreateAccount";
 import { ProfileProvider } from "./context/ProfileProvider";
 import { VulnerableActivity } from "./components/VulnerableActivity";
+import { GetCollaborators } from "./components/dashboard/sidebar/GetCollaborators";
 
 function App() {
   return (
@@ -44,6 +45,10 @@ function App() {
               <Route
                 path="configurar-perfil/actividad-vulnerables"
                 element={<VulnerableActivity />}
+              />
+              <Route
+                path="configurar-perfil/colaboradores"
+                element={<GetCollaborators />}
               />
               <Route
                 path="agregar-colaborador"

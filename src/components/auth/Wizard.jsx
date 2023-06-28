@@ -3,6 +3,8 @@ import { useAuth } from "../../hooks/useAuth";
 import Swal from "sweetalert2";
 import { useProfile } from "../../hooks/useProfile";
 import { OneError } from "../errors/OneError";
+import { Collaborators } from "../Collaborators";
+import { Address } from "../Address";
 
 const Wizard = () => {
   const { auth } = useAuth();
@@ -10,7 +12,7 @@ const Wizard = () => {
   const [currentStep, setCurrentStep] = useState(1);
 
   const [fechaConstitucion, setFechaConstitucion] = useState("");
-  const [clavePais, setClavePais] = useState("");
+  // const [clavePais, setClavePais] = useState("");
 
   const [claveLargaDistancia, setClaveLargaDistancia] = useState("");
   const [numeroTelefonico, setNumeroTelefonico] = useState("");
@@ -31,8 +33,31 @@ const Wizard = () => {
   const [actividadVulnerable, setActividadVulnerable] = useState("");
   const [actividadVulnerableRealizada, setActividadVulnerableRealizada] =
     useState("");
+  const [folio, setFolio] = useState("");
+  const [fechaEmision, setFechaEmision] = useState("");
+  const [fechaInicioAmparo, setFechaInicioAmparo] = useState("");
+  const [fechaTerminoAmparo, setFechaTerminoAmparo] = useState("");
+  const [agregarColaborador, setAgregarColaborador] = useState(false);
   const [existeValor, setExisteValor] = useState(false);
   const [error, setError] = useState("");
+
+  const [colaborador, setColaborador] = useState({
+    nombre: "",
+    apellido_paterno: "",
+    apellido_materno: "",
+    fecha_nacimiento: "",
+    rfc: "",
+    clave_unica: "",
+    clave_pais: "",
+    fecha_designacion: "",
+    usuario: auth._id,
+  });
+  const handleColaborador = (e) => {
+    setColaborador({
+      ...colaborador,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const {
     states,
@@ -46,6 +71,9 @@ const Wizard = () => {
     valorState,
     addProfile,
     setModalCompletado,
+    addCollaborators,
+    colaboradores,
+    AllactividadVulnerable,
   } = useProfile();
   const handleNext = () => {
     setCurrentStep((prevStep) => prevStep + 1);
@@ -59,33 +87,42 @@ const Wizard = () => {
     e.preventDefault();
     setExisteValor(true);
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (auth.persona === "M") {
       if (
-        ![
+        [
           fechaConstitucion,
           clavePaisNacionalidad,
           claveLargaDistancia,
           numeroTelefonico,
           numeroMovil,
-        ].includes(" ")
+          folio,
+          fechaEmision,
+          fechaInicioAmparo,
+          fechaTerminoAmparo,
+        ].includes("")
       ) {
-        await addProfile({
-          fechaConstitucion,
-          clavePaisNacionalidad,
-          claveLargaDistancia,
-          numeroTelefonico,
-          numeroMovil,
-          usuario: auth._id,
-        });
-        setModalCompletado(true);
-      } else {
         setError("todos los campos son obligatorios");
         setTimeout(() => {
           setError("");
-        }, 2000);
+        }, 1500);
+        return;
       }
+      await addProfile({
+        fechaConstitucion,
+        clavePaisNacionalidad,
+        claveLargaDistancia,
+        numeroTelefonico,
+        numeroMovil,
+        folio,
+        fechaEmision,
+        fechaInicioAmparo,
+        fechaTerminoAmparo,
+        usuario: auth._id,
+      });
+      setModalCompletado(true);
     }
     if (auth.persona === "F") {
       if (
@@ -97,6 +134,10 @@ const Wizard = () => {
           claveLargaDistancia,
           numeroTelefonico,
           numeroMovil,
+          folio,
+          fechaEmision,
+          fechaInicioAmparo,
+          fechaTerminoAmparo,
         ].includes("")
       ) {
         await addProfile({
@@ -107,6 +148,10 @@ const Wizard = () => {
           claveLargaDistancia,
           numeroTelefonico,
           numeroMovil,
+          folio,
+          fechaEmision,
+          fechaInicioAmparo,
+          fechaTerminoAmparo,
           usuario: auth._id,
         });
         setModalCompletado(true);
@@ -176,9 +221,33 @@ const Wizard = () => {
   };
 
   if (municipios.municipios) {
+    console.log(municipios.municipios);
     setCargando(true);
   }
-
+  const handleAgregarColaborador = async () => {
+    if (Object.values(colaborador).includes("")) {
+      return "error";
+    }
+    await addCollaborators(colaborador);
+    Swal.fire({
+      position: "top-end",
+      icon: "success",
+      title: "Colaborador Agregado!",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+    setAgregarColaborador(false);
+    setColaborador({
+      nombre: "",
+      apellido_paterno: "",
+      apellido_materno: "",
+      fecha_nacimiento: "",
+      rfc: "",
+      clave_unica: "",
+      clave_pais: "",
+      fecha_designacion: "",
+    });
+  };
   return (
     <>
       <>
@@ -218,12 +287,21 @@ const Wizard = () => {
             >
               Datos de la actividad vulnerable
             </button>
+            <button
+              type="button"
+              onClick={() => setCurrentStep(4)}
+              className={`${
+                currentStep === 4
+                  ? "fs-4 nav-link text-dark bg-primary text-white rounded"
+                  : "fs-4 nav-link text-dark"
+              } `}
+            >
+              encargado del cumplimiento
+            </button>
           </nav>
-          <h1 className="text-center">Wizard</h1>
           {currentStep === 1 && (
             <div>
               <div>
-                {/* <h2>Paso 1</h2> */}
                 {auth.persona === "F" ? (
                   <>
                     <div className="mt-3">
@@ -272,6 +350,50 @@ const Wizard = () => {
                         onChange={(e) => setClavePaisNacimiento(e.target.value)}
                       />
                     </div>
+                    <div className="mt-3">
+                      <label htmlFor="fecha" className="form-label fs-5">
+                        Numero o Folio
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control form-control-lg py-3"
+                        value={folio}
+                        onChange={(e) => setFolio(e.target.value)}
+                      />
+                    </div>
+                    <div className="mt-3">
+                      <label htmlFor="fecha" className="form-label fs-5">
+                        Fecha de Emision
+                      </label>
+                      <input
+                        type="date"
+                        className="form-control form-control-lg py-3"
+                        value={fechaEmision}
+                        onChange={(e) => setFechaEmision(e.target.value)}
+                      />
+                    </div>
+                    <div className="mt-3">
+                      <label htmlFor="fecha" className="form-label fs-5">
+                        Fecha de inicio del periodo que ampara
+                      </label>
+                      <input
+                        type="date"
+                        className="form-control form-control-lg py-3"
+                        value={fechaInicioAmparo}
+                        onChange={(e) => setFechaInicioAmparo(e.target.value)}
+                      />
+                    </div>
+                    <div className="mt-3">
+                      <label htmlFor="fecha" className="form-label fs-5">
+                        Fecha de termino del periodo que ampara
+                      </label>
+                      <input
+                        type="date"
+                        className="form-control form-control-lg py-3"
+                        value={fechaTerminoAmparo}
+                        onChange={(e) => setFechaTerminoAmparo(e.target.value)}
+                      />
+                    </div>
                   </>
                 ) : (
                   <>
@@ -297,6 +419,50 @@ const Wizard = () => {
                         onChange={(e) =>
                           setClavePaisNacionalidad(e.target.value)
                         }
+                      />
+                    </div>
+                    <div className="mt-3">
+                      <label htmlFor="fecha" className="form-label fs-5">
+                        Numero o Folio
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control form-control-lg py-3"
+                        value={folio}
+                        onChange={(e) => setFolio(e.target.value)}
+                      />
+                    </div>
+                    <div className="mt-3">
+                      <label htmlFor="fecha" className="form-label fs-5">
+                        Fecha de Emision
+                      </label>
+                      <input
+                        type="date"
+                        className="form-control form-control-lg py-3"
+                        value={fechaEmision}
+                        onChange={(e) => setFechaEmision(e.target.value)}
+                      />
+                    </div>
+                    <div className="mt-3">
+                      <label htmlFor="fecha" className="form-label fs-5">
+                        Fecha de inicio del periodo que ampara
+                      </label>
+                      <input
+                        type="date"
+                        className="form-control form-control-lg py-3"
+                        value={fechaInicioAmparo}
+                        onChange={(e) => setFechaInicioAmparo(e.target.value)}
+                      />
+                    </div>
+                    <div className="mt-3">
+                      <label htmlFor="fecha" className="form-label fs-5">
+                        Fecha de termino del periodo que ampara
+                      </label>
+                      <input
+                        type="date"
+                        className="form-control form-control-lg py-3"
+                        value={fechaTerminoAmparo}
+                        onChange={(e) => setFechaTerminoAmparo(e.target.value)}
                       />
                     </div>
                   </>
@@ -347,7 +513,6 @@ const Wizard = () => {
           )}
           {currentStep === 3 && (
             <div>
-              <h2>Paso 3</h2>
               <button
                 type="button"
                 onClick={changeActividadVulnerable}
@@ -355,6 +520,7 @@ const Wizard = () => {
               >
                 Agregar Domicilio
               </button>
+              {AllactividadVulnerable.length > 0 ? <Address /> : null}
               {existeValor && (
                 <>
                   <label
@@ -537,6 +703,158 @@ const Wizard = () => {
               )}
             </div>
           )}
+          {currentStep === 4 && (
+            <div>
+              <button
+                type="button"
+                onClick={() => setAgregarColaborador(true)}
+                className="btn btn-primary text-uppercase mt-3  fs-4 mb-4"
+              >
+                Agregar Colaborador
+              </button>
+
+              {colaboradores.length ? <Collaborators /> : null}
+
+              {agregarColaborador && (
+                <>
+                  <div className="mt-3">
+                    <label
+                      htmlFor="nombre-colaborador"
+                      className="form-label fs-5 "
+                    >
+                      Nombre
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control form-control-lg py-3"
+                      id="nombre-colaborador"
+                      value={colaborador.nombre}
+                      name="nombre"
+                      onChange={(e) => handleColaborador(e)}
+                    />
+                  </div>
+                  <div className="mt-3">
+                    <label
+                      htmlFor="apellido-paterno-colaborador"
+                      className="form-label fs-5 "
+                    >
+                      Apellido Paterno
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control form-control-lg py-3"
+                      id="apellido-paterno-colaborador"
+                      value={colaborador.apellido_paterno}
+                      name="apellido_paterno"
+                      onChange={(e) => handleColaborador(e)}
+                    />
+                  </div>
+                  <div className="mt-3">
+                    <label
+                      htmlFor="apellido-materno-colaborador"
+                      className="form-label fs-5 "
+                    >
+                      Apellido Materno
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control form-control-lg py-3"
+                      id="apellido-materno-colaborador"
+                      value={colaborador.apellido_materno}
+                      name="apellido_materno"
+                      onChange={(e) => handleColaborador(e)}
+                    />
+                  </div>
+                  <div className="mt-3">
+                    <label
+                      htmlFor="fecha-nacimiento-colaborador"
+                      className="form-label fs-5 "
+                    >
+                      Fecha de Nacimiento
+                    </label>
+                    <input
+                      type="date"
+                      className="form-control form-control-lg py-3"
+                      id="fecha-nacimiento-colaborador"
+                      value={colaborador.fecha_nacimiento}
+                      name="fecha_nacimiento"
+                      onChange={(e) => handleColaborador(e)}
+                    />
+                  </div>
+                  <div className="mt-3">
+                    <label
+                      htmlFor="registro-colaborador"
+                      className="form-label fs-5 "
+                    >
+                      RFC
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control form-control-lg py-3"
+                      id="registro-colaborador"
+                      value={colaborador.rfc}
+                      name="rfc"
+                      onChange={(e) => handleColaborador(e)}
+                    />
+                  </div>
+                  <div className="mt-3">
+                    <label
+                      htmlFor="clave-unica-colaborador"
+                      className="form-label fs-5 "
+                    >
+                      Clave Única de Registro de Población
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control form-control-lg py-3"
+                      id="clave-unica-colaborador"
+                      value={colaborador.clave_unica}
+                      name="clave_unica"
+                      onChange={(e) => handleColaborador(e)}
+                    />
+                  </div>
+                  <div className="mt-3">
+                    <label
+                      htmlFor="clave-pais-colaborador"
+                      className="form-label fs-5 "
+                    >
+                      Clave país de nacionalidad
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control form-control-lg py-3"
+                      id="clave-pais-colaborador"
+                      value={colaborador.clave_pais}
+                      name="clave_pais"
+                      onChange={(e) => handleColaborador(e)}
+                    />
+                  </div>
+                  <div className="mt-3">
+                    <label
+                      htmlFor="fecha-designacion-colaborador"
+                      className="form-label fs-5 "
+                    >
+                      Fecha de designación
+                    </label>
+                    <input
+                      type="date"
+                      className="form-control form-control-lg py-3"
+                      id="fecha-designacion-colaborador"
+                      value={colaborador.fecha_designacion}
+                      name="fecha_designacion"
+                      onChange={(e) => handleColaborador(e)}
+                    />
+                  </div>
+                  <input
+                    type="submit"
+                    className="btn btn-warning mt-3 uppercase fs-4"
+                    value="Agregar Colaborador"
+                    onClick={handleAgregarColaborador}
+                  />
+                </>
+              )}
+            </div>
+          )}
           <div className="d-flex justify-content-between">
             {currentStep > 1 && (
               <button
@@ -546,7 +864,7 @@ const Wizard = () => {
                 Anterior
               </button>
             )}
-            {currentStep < 3 && (
+            {currentStep <= 3 && (
               <button
                 className="mt-4 btn btn-primary  fs-3 "
                 onClick={handleNext}
@@ -554,7 +872,7 @@ const Wizard = () => {
                 Siguiente
               </button>
             )}
-            {currentStep === 3 && (
+            {currentStep === 4 && (
               <button
                 className="mt-4 btn btn-primary  fs-3 "
                 onClick={handleSubmit}
