@@ -19,6 +19,7 @@ import { CreateAccount } from "./components/auth/CreateAccount";
 import { ProfileProvider } from "./context/ProfileProvider";
 import { VulnerableActivity } from "./components/VulnerableActivity";
 import { GetCollaborators } from "./components/dashboard/sidebar/GetCollaborators";
+import { Factorization } from "./components/dashboard/sidebar/Factorization";
 
 function App() {
   return (
@@ -49,6 +50,10 @@ function App() {
               <Route
                 path="configurar-perfil/colaboradores"
                 element={<GetCollaborators />}
+              />
+              <Route
+                path="configurar-perfil/factorizacion"
+                element={<Factorization />}
               />
               <Route
                 path="agregar-colaborador"

@@ -3,11 +3,10 @@
 // import clientAxios from '../../../config/clientAxios'
 // import { AlertaGreat } from '../../alertaGreat/AlertaGreat'
 // import { OneError } from '../../errors/OneError'
-import { useLocation, Link } from "react-router-dom";
 import { useProfile } from "../../../hooks/useProfile";
 import { useAuth } from "../../../hooks/useAuth";
+import { NavLayout } from "./NavLayout";
 export const SettingProfile = () => {
-  const location = useLocation();
   const { profile } = useProfile();
   const { auth } = useAuth();
   const { contribuyente, email, nombreComercial, persona, rfc } = auth;
@@ -24,45 +23,7 @@ export const SettingProfile = () => {
 
   return (
     <>
-      <div className="d-flex justify-content-between align-items-center">
-        <nav className="d-flex gap-3 fs-3">
-          <Link
-            to={"/dashboard/configurar-perfil"}
-            className={`${
-              location.pathname === "/dashboard/configurar-perfil"
-                ? "bg-primary text-white rounded"
-                : ""
-            } nav-link fs-3 p-2  `}
-          >
-            Información Perfil
-          </Link>
-          <Link
-            to={"/dashboard/configurar-perfil/actividad-vulnerables"}
-            className={`${
-              location.pathname ===
-              "/dashboard/configurar-perfil/actividad-vulnerables"
-                ? "bg-primary text-white  rounded"
-                : ""
-            } nav-link fs-3 p-2  `}
-          >
-            Actividades Vulnerables
-          </Link>
-          <Link
-            to={"/dashboard/configurar-perfil/colaboradores"}
-            className={`${
-              location.pathname ===
-              "/dashboard/configurar-perfil/colaboradores"
-                ? "bg-primary text-white  rounded"
-                : ""
-            } nav-link fs-3 p-2  `}
-          >
-            Colaboradores
-          </Link>
-        </nav>
-        <button className="btn btn-primary text-uppercase fs-4 fw-bold py-3">
-          Actualizar Perfil
-        </button>
-      </div>
+      <NavLayout />
 
       <div className="mt-5 container-xl  ">
         <div className="shadow bg-white p-3  ">
@@ -98,15 +59,21 @@ export const SettingProfile = () => {
           <ul className="informacion-lista">
             <li className="fs-3 mb-3 fw-bold">
               Fecha de Nacimiento:{" "}
-              <span className="ms-2 fw-normal text-secondary">{fechaNacimiento}</span>
+              <span className="ms-2 fw-normal text-secondary">
+                {fechaNacimiento}
+              </span>
             </li>{" "}
             <li className="fs-3 mb-3 fw-bold">
               Numero Celular:{" "}
-              <span className="ms-2 fw-normal text-secondary">{numeroMovil}</span>
+              <span className="ms-2 fw-normal text-secondary">
+                {numeroMovil}
+              </span>
             </li>{" "}
             <li className="fs-3 mb-3 fw-bold">
               Numero de Telefono:{" "}
-              <span className="ms-2 fw-normal text-secondary">{numeroTelefonico }</span>
+              <span className="ms-2 fw-normal text-secondary">
+                {numeroTelefonico}
+              </span>
             </li>{" "}
           </ul>
         </div>

@@ -226,7 +226,11 @@ const Wizard = () => {
   }
   const handleAgregarColaborador = async () => {
     if (Object.values(colaborador).includes("")) {
-      return "error";
+      setError("todos los campos son obligatorios");
+      setTimeout(() => {
+        setError("");
+      }, 1500);
+      return;
     }
     await addCollaborators(colaborador);
     Swal.fire({
