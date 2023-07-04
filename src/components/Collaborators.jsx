@@ -2,7 +2,7 @@ import { useProfile } from "../hooks/useProfile";
 import { TableCollaborator } from "./TableCollaborator";
 import Table from "react-bootstrap/Table";
 
-export const Collaborators = () => {
+export const Collaborators = ({ handleColaboradores }) => {
   const { colaboradores } = useProfile();
 
   return (
@@ -13,6 +13,7 @@ export const Collaborators = () => {
             <th>Nombre Colaborador</th>
             <th>Apellido Paterno</th>
             <th>Apellido Materno</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -20,6 +21,7 @@ export const Collaborators = () => {
             <TableCollaborator
               key={colaborador._id}
               colaborador={colaborador}
+              handleColaboradores={handleColaboradores}
             />
           ))}
         </tbody>

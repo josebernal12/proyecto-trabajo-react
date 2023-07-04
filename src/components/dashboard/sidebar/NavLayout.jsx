@@ -1,9 +1,12 @@
 import { useLocation, Link } from "react-router-dom";
+import { useProfile } from "../../../hooks/useProfile";
 
 export const NavLayout = () => {
   const location = useLocation();
+  const { showModal, setShowModal } = useProfile();
+
   return (
-    <div className="d-flex justify-content-between align-items-center">
+    <div className="d-flex justify-content-between align-items-center mb-5">
       <nav className="d-flex gap-3 fs-3">
         <Link
           to={"/dashboard/configurar-perfil"}
@@ -47,7 +50,10 @@ export const NavLayout = () => {
           Factorización
         </Link>
       </nav>
-      <button className="btn btn-primary text-uppercase fs-4 fw-bold py-3">
+      <button
+        onClick={() => setShowModal(true)}
+        className="btn btn-primary text-uppercase fs-4 fw-bold py-3"
+      >
         Actualizar Perfil
       </button>
     </div>

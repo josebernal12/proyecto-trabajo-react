@@ -15,6 +15,7 @@ const ProfileProvider = ({ children }) => {
   const [valorState, setValorState] = useState("");
   const [municipios, setMunicipios] = useState([]);
   const [valorMunicipio, setValorMunicipio] = useState("");
+  const [showModal, setShowModal] = useState(false);
   const [modalCompletado, setModalCompletado] = useState(false);
   const [colaboradores, setColaboradores] = useState([]);
   // const [localidades, setLocalidades] = useState([])
@@ -139,8 +140,68 @@ const ProfileProvider = ({ children }) => {
       },
       config
     );
-    console.log(data);
     setAllActividadVulnerable([...AllactividadVulnerable, data]);
+  };
+  const updateActividadVulnerable = async (infoActividad, id) => {
+    try {
+      // console.log(infoActividad);
+      const { data } = await clientAxios.put(
+        `/perfil/actividad-vulnerable/${id}`,
+        infoActividad,
+        config
+      );
+      const actividadUpdate = AllactividadVulnerable.map((actividadState) =>
+        actividadState._id === data._id ? data : actividadState
+      );
+      setAllActividadVulnerable(actividadUpdate);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const deleteActividadVulnerable = async (id) => {
+    try {
+      const { data } = await clientAxios.delete(
+        `/perfil/actividad-vulnerable/${id}`,
+        config
+      );
+      const actividadVulnerableActualizada = AllactividadVulnerable.filter(
+        (actividadState) => actividadState._id !== data._id
+      );
+      setAllActividadVulnerable(actividadVulnerableActualizada);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const updateColaboradorBD = async (id, colaborador) => {
+    console.log(colaborador);
+    try {
+      const { data } = await clientAxios.put(
+        `/perfil/colaborador/${id}`,
+        colaborador,
+        config
+      );
+      const colaboradorUpdate = colaboradores.map((col) =>
+        col._id === data._id ? data : col
+      );
+      setColaboradores(colaboradorUpdate);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const deleteColaborador = async (id) => {
+    try {
+      const { data } = await clientAxios.delete(
+        `/perfil/colaborador/${id}`,
+        config
+      );
+      const colaboradoresActualizada = colaboradores.filter(
+        (colaboradorState) => colaboradorState._id !== data._id
+      );
+      console.log(data);
+      setColaboradores(colaboradoresActualizada);
+    } catch (error) {
+      console.log(error);
+    }
   };
   const addProfile = async (info) => {
     const token = localStorage.getItem("token");
@@ -189,6 +250,12 @@ const ProfileProvider = ({ children }) => {
         addCollaborators,
         colaboradores,
         AllactividadVulnerable,
+        showModal,
+        setShowModal,
+        updateActividadVulnerable,
+        deleteActividadVulnerable,
+        deleteColaborador,
+        updateColaboradorBD,
       }}
     >
       {children}

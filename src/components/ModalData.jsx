@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
 import Wizard from "./auth/Wizard";
+import { useProfile } from "../hooks/useProfile";
 
 export const ModalData = () => {
-  const [showModal, setShowModal] = useState(false);
+  const {showModal, setShowModal} = useProfile()
 
   useEffect(() => {
     setShowModal(true); // Activar modal al ingresar a la página

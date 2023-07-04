@@ -12,7 +12,6 @@ const Wizard = () => {
   const [currentStep, setCurrentStep] = useState(1);
 
   const [fechaConstitucion, setFechaConstitucion] = useState("");
-  // const [clavePais, setClavePais] = useState("");
 
   const [claveLargaDistancia, setClaveLargaDistancia] = useState("");
   const [numeroTelefonico, setNumeroTelefonico] = useState("");
@@ -22,9 +21,6 @@ const Wizard = () => {
   const [clavePaisNacionalidad, setClavePaisNacionalidad] = useState("");
   const [clavePaisNacimiento, setClavePaisNacimiento] = useState("");
   const [codigoPostal, setCodigoPostal] = useState("");
-  // const [entidadFederativa, setEntidadFederativa] = useState("");
-  // const [delegacion, setDelegacion] = useState("");
-  // const [localidad, setLocalidad] = useState("");
   const [colonia, setColonia] = useState("");
   const [tipoVialidad, setTipoVialidad] = useState("");
   const [calle, setCalle] = useState("");
@@ -38,9 +34,16 @@ const Wizard = () => {
   const [fechaInicioAmparo, setFechaInicioAmparo] = useState("");
   const [fechaTerminoAmparo, setFechaTerminoAmparo] = useState("");
   const [agregarColaborador, setAgregarColaborador] = useState(false);
+  const [existUpdate, setExistUpdate] = useState({
+    id: "",
+    type: false,
+  });
   const [existeValor, setExisteValor] = useState(false);
   const [error, setError] = useState("");
-
+  const [updateColaborador, setUpdateColaborador] = useState({
+    colaborador: "",
+    type: false,
+  });
   const [colaborador, setColaborador] = useState({
     nombre: "",
     apellido_paterno: "",
@@ -56,6 +59,7 @@ const Wizard = () => {
     setColaborador({
       ...colaborador,
       [e.target.name]: e.target.value,
+      usuario: auth._id,
     });
   };
 
@@ -74,6 +78,8 @@ const Wizard = () => {
     addCollaborators,
     colaboradores,
     AllactividadVulnerable,
+    updateActividadVulnerable,
+    updateColaboradorBD,
   } = useProfile();
   const handleNext = () => {
     setCurrentStep((prevStep) => prevStep + 1);
@@ -83,8 +89,37 @@ const Wizard = () => {
     setCurrentStep((prevStep) => prevStep - 1);
   };
 
-  const changeActividadVulnerable = (e) => {
+  const changeActividadVulnerable = (e, actividad) => {
     e.preventDefault();
+    setActividadVulnerableRealizada("");
+    setActividadVulnerable("");
+    setTipoVialidad("");
+    setCodigoPostal("");
+    setColonia("");
+    setValorState("");
+    setValorMunicipio("");
+    setCalle("");
+    setNumeroExterior("");
+    setNumeroInterior("");
+    setExistUpdate(false);
+    if (actividad?._id) {
+      setActividadVulnerableRealizada(actividad.actividadVulnerableRealizada);
+      setCodigoPostal(actividad.codigoPostal);
+      setValorState(actividad.entidadFederativa);
+      setValorMunicipio(actividad.municipio);
+      setColonia(actividad.colonia);
+      setTipoVialidad(actividad.tipoVialidad);
+      setCalle(actividad.calle);
+      setNumeroExterior(actividad.numeroExterior);
+      setNumeroInterior(actividad.numeroInterior);
+      setActividadVulnerable(
+        actividad.actividadVulnerableRealizadaEnElDomicilio
+      );
+      setExistUpdate({
+        id: actividad._id,
+        type: true,
+      });
+    }
     setExisteValor(true);
   };
 
@@ -161,7 +196,6 @@ const Wizard = () => {
           setError("");
         }, 2000);
       }
-      // setError("");
     }
   };
 
@@ -186,6 +220,35 @@ const Wizard = () => {
       setTimeout(() => {
         setError("");
       }, 2000);
+      return;
+    }
+
+    if (existUpdate.type) {
+      await updateActividadVulnerable(
+        {
+          actividadVulnerableRealizada,
+          codigoPostal,
+          entidadFederativa: valorState,
+          municipio: valorMunicipio,
+          // localidad,
+          colonia,
+          tipoVialidad,
+          calle,
+          numeroExterior,
+          numeroInterior,
+          actividadVulnerable,
+          usuario: auth._id,
+        },
+        existUpdate.id
+      );
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Domilicio Actualizado!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      setExisteValor(false);
       return;
     }
     Swal.fire({
@@ -221,7 +284,6 @@ const Wizard = () => {
   };
 
   if (municipios.municipios) {
-    console.log(municipios.municipios);
     setCargando(true);
   }
   const handleAgregarColaborador = async () => {
@@ -230,6 +292,19 @@ const Wizard = () => {
       setTimeout(() => {
         setError("");
       }, 1500);
+      return;
+    }
+    if (updateColaborador.type) {
+      await updateColaboradorBD(updateColaborador.colaborador._id, colaborador);
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Colaborador Actualizado!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      setAgregarColaborador(false);
+
       return;
     }
     await addCollaborators(colaborador);
@@ -251,6 +326,41 @@ const Wizard = () => {
       clave_pais: "",
       fecha_designacion: "",
     });
+  };
+  const handleColaboradores = (colaborador) => {
+    setAgregarColaborador(true);
+    setColaborador({
+      nombre: "",
+      apellido_paterno: "",
+      apellido_materno: "",
+      fecha_nacimiento: "",
+      rfc: "",
+      clave_unica: "",
+      clave_pais: "",
+      fecha_designacion: "",
+      usuario: auth._id,
+    });
+    setUpdateColaborador({
+      colaborador: "",
+      type: false,
+    });
+    if (colaborador._id) {
+      setColaborador({
+        nombre: colaborador.nombre,
+        apellido_paterno: colaborador.apellido_paterno,
+        apellido_materno: colaborador.apellido_materno,
+        fecha_nacimiento: colaborador.fecha_nacimiento,
+        rfc: colaborador.rfc,
+        clave_unica: colaborador.clave_unica,
+        clave_pais: colaborador.clave_pais,
+        fecha_designacion: colaborador.fecha_designacion,
+        usuario: auth._id,
+      });
+      setUpdateColaborador({
+        colaborador: colaborador,
+        type: true,
+      });
+    }
   };
   return (
     <>
@@ -524,7 +634,11 @@ const Wizard = () => {
               >
                 Agregar Domicilio
               </button>
-              {AllactividadVulnerable.length > 0 ? <Address /> : null}
+              {AllactividadVulnerable.length > 0 ? (
+                <Address
+                  changeActividadVulnerable={changeActividadVulnerable}
+                />
+              ) : null}
               {existeValor && (
                 <>
                   <label
@@ -535,7 +649,7 @@ const Wizard = () => {
                   </label>
                   <select
                     className="form-control form-control-lg"
-                    defaultValue="seleccion"
+                    value={actividadVulnerableRealizada || "seleccion"}
                     onChange={(e) =>
                       setActividadVulnerableRealizada(e.target.value)
                     }
@@ -569,7 +683,7 @@ const Wizard = () => {
                       name=""
                       id="entidad-federativa"
                       className="form-control form-control-lg"
-                      defaultValue="seleccion"
+                      value={valorState || "seleccion"}
                       onChange={(e) => setValorState(e.target.value)}
                     >
                       <option value="seleccion" disabled>
@@ -588,9 +702,13 @@ const Wizard = () => {
                       <select
                         name=""
                         id="delegacion"
+                        value={valorMunicipio || "seleccion"}
                         className="form-control form-control-lg"
                         onChange={(e) => setValorMunicipio(e.target.value)}
                       >
+                        <option value="seleccion" disabled>
+                          -- Seleccione --
+                        </option>
                         {municipios.municipios.map((municipio) => (
                           <option key={municipio.clave}>
                             {municipio.nombre}
@@ -700,7 +818,11 @@ const Wizard = () => {
                   <input
                     type="submit"
                     className="btn btn-warning mt-3 uppercase fs-4"
-                    value="Agregar Domicilio"
+                    value={`${
+                      existUpdate.type
+                        ? "Actualizar Actividad Vulnerable"
+                        : "Agregar Domicilio"
+                    }`}
                     onClick={handleAgregarDomicilio}
                   />
                 </>
@@ -711,13 +833,15 @@ const Wizard = () => {
             <div>
               <button
                 type="button"
-                onClick={() => setAgregarColaborador(true)}
+                onClick={handleColaboradores}
                 className="btn btn-primary text-uppercase mt-3  fs-4 mb-4"
               >
                 Agregar Colaborador
               </button>
 
-              {colaboradores.length ? <Collaborators /> : null}
+              {colaboradores.length ? (
+                <Collaborators handleColaboradores={handleColaboradores} />
+              ) : null}
 
               {agregarColaborador && (
                 <>
@@ -852,7 +976,11 @@ const Wizard = () => {
                   <input
                     type="submit"
                     className="btn btn-warning mt-3 uppercase fs-4"
-                    value="Agregar Colaborador"
+                    value={`${
+                      updateColaborador.type
+                        ? "Actualizar Colaborador"
+                        : "Agregar Colaborador"
+                    }`}
                     onClick={handleAgregarColaborador}
                   />
                 </>
