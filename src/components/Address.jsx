@@ -3,7 +3,7 @@ import { useProfile } from "../hooks/useProfile";
 import { TableAddress } from "./TableAddress";
 
 export const Address = ({ changeActividadVulnerable }) => {
-  const { AllactividadVulnerable } = useProfile();
+  const { AllactividadVulnerable, modalCompletado } = useProfile();
   return (
     <>
       <Table striped bordered hover variant="ligth">
@@ -12,7 +12,7 @@ export const Address = ({ changeActividadVulnerable }) => {
             <th>Actividad Vulnerable</th>
             <th>Entidad Federativa</th>
             <th>Municipio</th>
-            <th>Acciones</th>
+            {modalCompletado ? null : <th>Acciones</th>}
           </tr>
         </thead>
         <tbody>

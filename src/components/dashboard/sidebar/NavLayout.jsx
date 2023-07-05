@@ -3,7 +3,7 @@ import { useProfile } from "../../../hooks/useProfile";
 
 export const NavLayout = () => {
   const location = useLocation();
-  const { showModal, setShowModal } = useProfile();
+  const { setModalCompletado, profile, setExistProfile } = useProfile();
 
   return (
     <div className="d-flex justify-content-between align-items-center mb-5">
@@ -51,7 +51,10 @@ export const NavLayout = () => {
         </Link>
       </nav>
       <button
-        onClick={() => setShowModal(true)}
+        onClick={() => {
+          setModalCompletado(false);
+          setExistProfile(true);
+        }}
         className="btn btn-primary text-uppercase fs-4 fw-bold py-3"
       >
         Actualizar Perfil

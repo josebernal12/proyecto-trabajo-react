@@ -3,7 +3,7 @@ import { TableCollaborator } from "./TableCollaborator";
 import Table from "react-bootstrap/Table";
 
 export const Collaborators = ({ handleColaboradores }) => {
-  const { colaboradores } = useProfile();
+  const { colaboradores, modalCompletado } = useProfile();
 
   return (
     <>
@@ -13,7 +13,7 @@ export const Collaborators = ({ handleColaboradores }) => {
             <th>Nombre Colaborador</th>
             <th>Apellido Paterno</th>
             <th>Apellido Materno</th>
-            <th>Acciones</th>
+            {modalCompletado ? null : <th>Acciones</th>}
           </tr>
         </thead>
         <tbody>

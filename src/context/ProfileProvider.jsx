@@ -9,7 +9,7 @@ const ProfileContext = createContext();
 const ProfileProvider = ({ children }) => {
   const config = useConfig();
   const [profile, setProfile] = useState({});
-  // const [valoresState, setValoresState] = useState([]);
+  const [existProfile, setExistProfile] = useState(false);
   const [AllactividadVulnerable, setAllActividadVulnerable] = useState([]);
   const [states, setStates] = useState([]);
   const [valorState, setValorState] = useState("");
@@ -18,7 +18,6 @@ const ProfileProvider = ({ children }) => {
   const [showModal, setShowModal] = useState(false);
   const [modalCompletado, setModalCompletado] = useState(false);
   const [colaboradores, setColaboradores] = useState([]);
-  // const [localidades, setLocalidades] = useState([])
   const [cargando, setCargando] = useState(false);
   const { auth } = useAuth();
   useEffect(() => {
@@ -27,8 +26,7 @@ const ProfileProvider = ({ children }) => {
       const estados = data.map((state) => {
         return state.nombre;
       });
-      // setValoresState(data);
-      // setMunicipios(municipiosBD);
+
       setStates(estados);
     };
 
@@ -70,7 +68,7 @@ const ProfileProvider = ({ children }) => {
       setModalCompletado(false);
     };
     consultApi();
-  }, []);
+  }, [auth]);
 
   useEffect(() => {
     const consultApi = async () => {
@@ -216,7 +214,16 @@ const ProfileProvider = ({ children }) => {
     };
 
     const { data } = await clientAxios.post("/perfil", info, config);
-    console.log(data);
+    setProfile(data);
+  };
+  const updateProfile = async (info, id) => {
+    try {
+      const { data } = await clientAxios.put(`/perfil/${id}`, info, config);
+      setProfile(data);
+      setModalCompletado(true);
+    } catch (error) {
+      console.log(error);
+    }
   };
   const addCollaborators = async (infoCollaborator) => {
     try {
@@ -230,6 +237,7 @@ const ProfileProvider = ({ children }) => {
       console.log(error);
     }
   };
+
   return (
     <ProfileContext.Provider
       value={{
@@ -244,6 +252,7 @@ const ProfileProvider = ({ children }) => {
         valorMunicipio,
         AddActividadVulnerable,
         addProfile,
+        updateProfile,
         setModalCompletado,
         modalCompletado,
         profile,
@@ -256,6 +265,8 @@ const ProfileProvider = ({ children }) => {
         deleteActividadVulnerable,
         deleteColaborador,
         updateColaboradorBD,
+        setExistProfile,
+        existProfile,
       }}
     >
       {children}

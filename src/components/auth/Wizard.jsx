@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import Swal from "sweetalert2";
 import { useProfile } from "../../hooks/useProfile";
@@ -80,6 +80,9 @@ const Wizard = () => {
     AllactividadVulnerable,
     updateActividadVulnerable,
     updateColaboradorBD,
+    profile,
+    updateProfile,
+    existProfile,
   } = useProfile();
   const handleNext = () => {
     setCurrentStep((prevStep) => prevStep + 1);
@@ -123,6 +126,33 @@ const Wizard = () => {
     setExisteValor(true);
   };
 
+  useEffect(() => {
+    if (existProfile) {
+      if (auth.persona === "F") {
+        setFechaNacimiento(profile.fechaNacimiento);
+        setClaveUnica(profile.ClaveUnica);
+        setClavePaisNacionalidad(profile.clavePaisNacionalidad);
+        setClavePaisNacionalidad(profile.clavePaisNacimiento);
+        setFechaEmision(profile.fechaEmision?.split("T")[0]);
+        setFechaInicioAmparo(profile.fechaInicioAmparo?.split("T")[0]);
+        setFechaTerminoAmparo(profile.fechaTerminoAmparo?.split("T")[0]);
+        setFolio(profile.folio);
+        setClaveLargaDistancia(profile.claveLargaDistancia);
+        setNumeroMovil(profile.numeroMovil);
+        setNumeroTelefonico(profile.numeroTelefonico);
+      } else {
+        setClaveLargaDistancia(profile.claveLargaDistancia);
+        setClavePaisNacionalidad(profile.clavePaisNacionalidad);
+        setFechaConstitucion(profile.fechaConstitucion);
+        setFechaEmision(profile.fechaEmision?.split("T")[0]);
+        setFechaInicioAmparo(profile.fechaInicioAmparo?.split("T")[0]);
+        setFechaTerminoAmparo(profile.fechaTerminoAmparo?.split("T")[0]);
+        setFolio(profile.folio);
+        setNumeroMovil(profile.numeroMovil);
+        setNumeroTelefonico(profile.numeroTelefonico);
+      }
+    }
+  }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (auth.persona === "M") {
@@ -143,6 +173,24 @@ const Wizard = () => {
         setTimeout(() => {
           setError("");
         }, 1500);
+        return;
+      }
+      if (profile._id) {
+        await updateProfile(
+          {
+            fechaConstitucion,
+            clavePaisNacionalidad,
+            claveLargaDistancia,
+            numeroTelefonico,
+            numeroMovil,
+            folio,
+            fechaEmision,
+            fechaInicioAmparo,
+            fechaTerminoAmparo,
+            usuario: auth._id,
+          },
+          profile._id
+        );
         return;
       }
       await addProfile({

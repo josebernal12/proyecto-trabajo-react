@@ -1,13 +1,18 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
 import Wizard from "./auth/Wizard";
 import { useProfile } from "../hooks/useProfile";
 
 export const ModalData = () => {
-  const {showModal, setShowModal} = useProfile()
+  const {
+    showModal,
+    setShowModal,
+    setModalCompletado,
+   
+  } = useProfile();
 
   useEffect(() => {
-    setShowModal(true); // Activar modal al ingresar a la página
+    setShowModal(true);
   }, []);
 
   const handleClose = () => {
@@ -18,18 +23,28 @@ export const ModalData = () => {
     <Modal
       className="modal "
       show={showModal}
-      onHide={handleClose}
+      onHide={() => {
+        handleClose();
+        setModalCompletado(true);
+      }}
       backdrop="static"
       size="xl"
     >
-      <Modal.Header closeButton  >
+      <Modal.Header closeButton>
         <Modal.Title>Modal Title</Modal.Title>
       </Modal.Header>
-      <Modal.Body >
+      <Modal.Body>
         <Wizard />
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" className="btn btn-secondary" onClick={handleClose}>
+        <Button
+          variant="secondary"
+          className="btn btn-secondary"
+          onClick={() => {
+            handleClose();
+            setModalCompletado(true);
+          }}
+        >
           Omitir
         </Button>
       </Modal.Footer>
