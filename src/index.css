@@ -31,3 +31,6 @@ body {
 .informacion-lista {
   list-style: none;
 }
+.color-nav {
+  background-color: #1a1a1a;
+}

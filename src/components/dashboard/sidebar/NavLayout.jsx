@@ -6,8 +6,9 @@ export const NavLayout = () => {
   const { setModalCompletado, profile, setExistProfile } = useProfile();
 
   return (
-    <div className="d-flex justify-content-between align-items-center mb-5">
-      <nav className="d-flex gap-3 fs-3">
+    
+    <div className="d-flex justify-content-between align-items-center mb-5 color-nav p-5">
+      <nav className="d-flex gap-3 fs-3 text-white">
         <Link
           to={"/dashboard/configurar-perfil"}
           className={`${

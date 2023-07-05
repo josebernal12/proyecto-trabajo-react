@@ -7,8 +7,8 @@ export const Dashboard = () => {
     <div className="container-fluid">
       <div className="row flex-nowrap">
         <Sidebar />
-        <div className="col">
-          <Header />
+        <div className="col p-0">
+          {/* <Header /> */}
           <Outlet />
         </div>
       </div>
