@@ -517,7 +517,7 @@ const Wizard = () => {
                         Numero o Folio
                       </label>
                       <input
-                        type="text"
+                        type="number"
                         className="form-control form-control-lg py-3"
                         value={folio}
                         onChange={(e) => setFolio(e.target.value)}

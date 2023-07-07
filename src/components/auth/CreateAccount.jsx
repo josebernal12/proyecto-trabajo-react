@@ -23,8 +23,8 @@ export const CreateAccount = () => {
     if (
       [
         name,
-        surnamePa,
-        surnamePa,
+        typePerson === "F" ? surnamePa : null,
+        typePerson === "F" ? surnameMA : null,
         rfc,
         email,
         password,

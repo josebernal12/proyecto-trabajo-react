@@ -7,7 +7,8 @@ export const SettingProfile = () => {
   const { contribuyente, email, nombreComercial, persona, rfc, Denominacion } =
     auth;
   const { fechaNacimiento, numeroMovil, numeroTelefonico,claveLargaDistancia } = profile;
-    return (
+    console.log(contribuyente)
+  return (
     <>
       <NavLayout />
 
@@ -51,7 +52,7 @@ export const SettingProfile = () => {
               <li className="fs-3 mb-3 fw-bold">
                 Denominación:{" "}
                 <span className="ms-2 fw-normal text-secondary">
-                  {Denominacion}
+                  {contribuyente}
                 </span>
               </li>
               <li className="fs-3 mb-3 fw-bold">
