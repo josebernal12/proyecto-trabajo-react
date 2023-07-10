@@ -9,26 +9,32 @@ export const ModalSeeActivityVulnerable = () => {
     setModalVerActividadVulnerable,
     modalVerActividadVulnerable,
     AllactividadVulnerable,
+    actividadVulnerable,
+    setActividadVulnerable,
   } = useProfile();
 
   return (
     <>
       <Modal
         show={modalVerActividadVulnerable}
-        onHide={() => setModalVerActividadVulnerable(false)}
+        onHide={() => {
+          setModalVerActividadVulnerable(false);
+          setActividadVulnerable({});
+        }}
       >
         <Modal.Header closeButton>
           <Modal.Title>Actividad Vulnerable</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {AllactividadVulnerable.map((activity) => (
-            <AllSeeActivity key={activity._id} activity={activity} />
-          ))}
+          <AllSeeActivity/>
         </Modal.Body>
         <Modal.Footer>
           <Button
             variant="secondary"
-            onClick={() => setModalVerActividadVulnerable(false)}
+            onClick={() => {
+              setModalVerActividadVulnerable(false);
+              setActividadVulnerable({});
+            }}
           >
             Cerrar
           </Button>

@@ -4,7 +4,12 @@ import { useProfile } from "../hooks/useProfile";
 
 export const TableCollaborator = ({ colaborador, handleColaboradores }) => {
   console.log(colaborador);
-  const { modalCompletado, deleteColaborador } = useProfile();
+  const {
+    modalCompletado,
+    deleteColaborador,
+    setModalVerColaboradores,
+    setColaborador,
+  } = useProfile();
   return (
     <tr>
       <td>{colaborador.nombre}</td>
@@ -26,6 +31,17 @@ export const TableCollaborator = ({ colaborador, handleColaboradores }) => {
           </button>
         </td>
       )}
+      <td>
+        <button
+          onClick={() => {
+            setModalVerColaboradores(true);
+            setColaborador(colaborador);
+          }}
+          className="btn btn-warning fw-bold text-uppercase "
+        >
+          Ver Colaborador
+        </button>
+      </td>
     </tr>
   );
 };

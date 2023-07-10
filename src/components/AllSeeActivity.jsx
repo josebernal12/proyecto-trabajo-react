@@ -1,4 +1,8 @@
-export const AllSeeActivity = ({ activity }) => {
+import { useProfile } from "../hooks/useProfile";
+
+export const AllSeeActivity = () => {
+  const { actividadVulnerable } = useProfile();
+
   const {
     actividadVulnerableRealizada,
     calle,
@@ -9,7 +13,7 @@ export const AllSeeActivity = ({ activity }) => {
     numeroExterior,
     numeroInterior,
     tipoVialidad,
-  } = activity;
+  } = actividadVulnerable;
   return (
     <div>
       <p className="fw-bold fs-4">

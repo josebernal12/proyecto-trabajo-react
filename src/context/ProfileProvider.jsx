@@ -11,6 +11,8 @@ const ProfileProvider = ({ children }) => {
   const [profile, setProfile] = useState({});
   const [existProfile, setExistProfile] = useState(false);
   const [AllactividadVulnerable, setAllActividadVulnerable] = useState([]);
+  const [actividadVulnerable, setActividadVulnerable] = useState({});
+  const [colaborador, setColaborador] = useState({});
   const [states, setStates] = useState([]);
   const [valorState, setValorState] = useState("");
   const [municipios, setMunicipios] = useState([]);
@@ -19,6 +21,7 @@ const ProfileProvider = ({ children }) => {
   const [modalCompletado, setModalCompletado] = useState(false);
   const [modalVerActividadVulnerable, setModalVerActividadVulnerable] =
     useState(false);
+  const [modalVerColaboradores, setModalVerColaboradores] = useState(false);
   const [colaboradores, setColaboradores] = useState([]);
   const [cargando, setCargando] = useState(false);
   const { auth } = useAuth();
@@ -97,10 +100,6 @@ const ProfileProvider = ({ children }) => {
     };
     consultApi();
   }, [auth]);
-
-
-  
-
 
   const AddActividadVulnerable = async (info) => {
     const {
@@ -274,7 +273,13 @@ const ProfileProvider = ({ children }) => {
         setExistProfile,
         existProfile,
         setModalVerActividadVulnerable,
-        modalVerActividadVulnerable
+        modalVerActividadVulnerable,
+        setModalVerColaboradores,
+        modalVerColaboradores,
+        setActividadVulnerable,
+        actividadVulnerable,
+        setColaborador,
+        colaborador,
       }}
     >
       {children}

@@ -14,6 +14,7 @@ export const Collaborators = ({ handleColaboradores }) => {
             <th>Apellido Paterno</th>
             <th>Apellido Materno</th>
             {modalCompletado ? null : <th>Acciones</th>}
+            <th>Ver Colaborador</th>
           </tr>
         </thead>
         <tbody>
