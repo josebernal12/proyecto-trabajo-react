@@ -13,6 +13,7 @@ export const Address = ({ changeActividadVulnerable }) => {
             <th>Entidad Federativa</th>
             <th>Municipio</th>
             {modalCompletado ? null : <th>Acciones</th>}
+            <th>Ver Actividad Vulnerable</th>
           </tr>
         </thead>
         <tbody>

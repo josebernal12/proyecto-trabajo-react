@@ -3,8 +3,12 @@
 import { useProfile } from "../hooks/useProfile";
 
 export const TableAddress = ({ actividad, changeActividadVulnerable }) => {
-  const { deleteActividadVulnerable, showModal, modalCompletado } =
-    useProfile();
+  const {
+    deleteActividadVulnerable,
+    showModal,
+    modalCompletado,
+    setModalVerActividadVulnerable,
+  } = useProfile();
   return (
     <tr>
       <td>{actividad.actividadVulnerableRealizada}</td>
@@ -26,6 +30,14 @@ export const TableAddress = ({ actividad, changeActividadVulnerable }) => {
           </button>
         </td>
       )}
+      <td>
+        <button
+          onClick={() => setModalVerActividadVulnerable(true)}
+          className="btn btn-warning fw-bold text-uppercase "
+        >
+          Ver Actividad Vulnerable
+        </button>
+      </td>
     </tr>
   );
 };

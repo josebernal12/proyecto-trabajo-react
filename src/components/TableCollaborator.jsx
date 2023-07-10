@@ -3,7 +3,8 @@
 import { useProfile } from "../hooks/useProfile";
 
 export const TableCollaborator = ({ colaborador, handleColaboradores }) => {
-  const { modalCompletado } = useProfile();
+  console.log(colaborador);
+  const { modalCompletado, deleteColaborador } = useProfile();
   return (
     <tr>
       <td>{colaborador.nombre}</td>
@@ -12,13 +13,13 @@ export const TableCollaborator = ({ colaborador, handleColaboradores }) => {
       {modalCompletado ? null : (
         <td className="d-flex gap-3">
           <button
-            onClick={(e) => changeActividadVulnerable(e, actividad)}
+            onClick={() => handleColaboradores(colaborador)}
             className="btn btn-primary"
           >
             Actualizar
           </button>
           <button
-            onClick={() => deleteActividadVulnerable(actividad._id)}
+            onClick={() => deleteColaborador(colaborador._id)}
             className="btn btn-danger"
           >
             Eliminar

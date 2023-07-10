@@ -377,6 +377,7 @@ const Wizard = () => {
   };
   const handleColaboradores = (colaborador) => {
     setAgregarColaborador(true);
+    console.log(colaborador)
     setColaborador({
       nombre: "",
       apellido_paterno: "",
@@ -634,7 +635,7 @@ const Wizard = () => {
           )}
           {currentStep === 2 && (
             <div>
-              <h2>Paso 2</h2>
+             
               <div className="mt-3">
                 <label htmlFor="clave" className="form-label fs-5">
                   Clave de larga distancia
