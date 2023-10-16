@@ -1,5 +1,4 @@
 services:
   - name: procrecer-frontend
-    env: node
     buildCommand: npm install
-    startCommand: npm run dev
+    startCommand: npm run build && npm run serve
