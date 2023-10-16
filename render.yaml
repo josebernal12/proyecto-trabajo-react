@@ -2,3 +2,4 @@ services:
   - name: procrecer-frontend
     buildCommand: npm install
     startCommand: npm run build && npm run serve
+    port: 3000
