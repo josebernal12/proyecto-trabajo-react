@@ -7,7 +7,7 @@ export const Collaborators = ({ handleColaboradores }) => {
 
   return (
     <>
-      <Table striped bordered hover variant="ligth">
+      <Table striped bordered hover size="xl"  >
         <thead>
           <tr>
             <th>Nombre Colaborador</th>

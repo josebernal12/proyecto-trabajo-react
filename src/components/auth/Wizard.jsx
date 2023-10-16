@@ -1039,7 +1039,7 @@ const Wizard = () => {
           <div className="d-flex justify-content-between">
             {currentStep > 1 && (
               <button
-                className="mt-4 btn btn-primary fs-3"
+                className="mt-4 btn btn-primary fs-4"
                 onClick={handlePrevious}
               >
                 Anterior
@@ -1047,7 +1047,7 @@ const Wizard = () => {
             )}
             {currentStep <= 3 && (
               <button
-                className="mt-4 btn btn-primary  fs-3 "
+                className="mt-4 btn btn-primary  fs-4 "
                 onClick={handleNext}
               >
                 Siguiente
@@ -1055,7 +1055,7 @@ const Wizard = () => {
             )}
             {currentStep === 4 && (
               <button
-                className="mt-4 btn btn-primary  fs-3 "
+                className="mt-4 btn btn-primary  fs-4 "
                 onClick={handleSubmit}
               >
                 Enviar

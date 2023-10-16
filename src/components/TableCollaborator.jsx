@@ -3,7 +3,6 @@
 import { useProfile } from "../hooks/useProfile";
 
 export const TableCollaborator = ({ colaborador, handleColaboradores }) => {
-  console.log(colaborador);
   const {
     modalCompletado,
     deleteColaborador,

@@ -31,7 +31,7 @@ export const ModalData = () => {
       size="xl"
     >
       <Modal.Header closeButton>
-        <Modal.Title>Modal Title</Modal.Title>
+        <Modal.Title>Rellenar Perfil</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Wizard />
@@ -39,7 +39,7 @@ export const ModalData = () => {
       <Modal.Footer>
         <Button
           variant="secondary"
-          className="btn btn-secondary"
+          className="btn btn-secondary fs-5"
           onClick={() => {
             handleClose();
             setModalCompletado(true);
