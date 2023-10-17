@@ -1,6 +1,5 @@
 import { Outlet } from "react-router-dom";
 import { Sidebar } from "./sidebar/Sidebar";
-import { Header } from "./Header";
 import { ModalSeeActivityVulnerable } from "../ModalSeeActivityVulnerable";
 import { ModalAllCollaborators } from "../ModalAllCollaborators";
 

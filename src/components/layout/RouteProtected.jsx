@@ -10,15 +10,19 @@ export const RouteProtected = () => {
   const { modalCompletado } = useProfile();
   if (checking) return <Spinner />;
   return (
+    // <>
+    //   {auth._id ? (
+    //     <>
+    //       {!modalCompletado && <ModalData />}
+    //       <Dashboard />
+    //     </>
+    //   ) : (
+    //     <Navigate to="/" />
+    //   )}
+    // </>
     <>
-      {auth._id ? (
-        <>
-          {!modalCompletado && <ModalData />}
-          <Dashboard />
-        </>
-      ) : (
-        <Navigate to="/" />
-      )}
+      {!modalCompletado && <ModalData />}
+      <Dashboard />
     </>
   );
 };
